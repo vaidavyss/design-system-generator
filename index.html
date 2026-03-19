@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DesignOS — AI Design System Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:ital,opsz,wght@1,9..144,400;0,9..144,700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#f5f3ef;--bg2:#eceae4;--surface:#ffffff;--surface2:#f9f8f6;
+  --border:#dddbd5;--border2:#c9c7c0;
+  --ink:#1a1916;--ink2:#4a4843;--ink3:#8a8880;
+  --accent:#2563eb;--accent-bg:#eff4ff;--accent-bdr:#bfcffd;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --orange:#ea580c;--orange-bg:#fff7ed;--red:#dc2626;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  --radius:10px;--radius-lg:16px;--tr:.2s ease;
+}
+[data-theme="dark"]{
+  --bg:#111014;--bg2:#1a1920;--surface:#1e1d25;--surface2:#252430;
+  --border:#2e2d3a;--border2:#3d3c4e;
+  --ink:#f0eff8;--ink2:#b0afbe;--ink3:#6e6d80;
+  --accent:#6183f8;--accent-bg:#1a1f40;--accent-bdr:#2d3a70;
+  --green:#4ade80;--green-bg:#0d2318;
+  --orange:#fb923c;--orange-bg:#2a1a0a;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;transition:background var(--tr),color var(--tr)}
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;display:inline-block}
+.theme-toggle{width:38px;height:38px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all var(--tr)}
+.theme-toggle:hover{border-color:var(--border2);box-shadow:var(--shadow-sm)}
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:48px 28px 80px}
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+@media(max-width:640px){.hero{grid-template-columns:1fr}}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:12px}
+.hero h1 em{font-style:italic;font-family:'Fraunces',serif;color:var(--accent);font-weight:700}
+.hero p{color:var(--ink3);font-size:15px;max-width:400px}
+.hero-stats{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+@media(max-width:640px){.hero-stats{flex-direction:row;align-items:center}}
+.stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink3);white-space:nowrap;box-shadow:var(--shadow-sm)}
+.stat-pill strong{color:var(--accent);font-weight:600}
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-sm);margin-bottom:28px;transition:background var(--tr),border-color var(--tr)}
+.card-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:24px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:16px;height:2px;background:var(--accent);border-radius:2px;display:inline-block}
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:20px}
+@media(max-width:700px){.form-row{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:12px;font-weight:600;letter-spacing:.4px;color:var(--ink2)}
+.field input,.field select{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--ink);padding:10px 14px;font-family:'Instrument Sans',sans-serif;font-size:14px;outline:none;transition:all var(--tr);width:100%}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);background:var(--surface)}
+.field input[type="color"]{padding:4px;height:44px;cursor:pointer}
+.field select option{background:var(--surface)}
+/* PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:var(--surface2);border:1.5px solid var(--border);border-radius:100px;padding:6px 15px;font-size:13px;cursor:pointer;transition:all var(--tr);color:var(--ink2);font-weight:500;user-select:none}
+.pill:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.pill.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+/* MODE */
+.mode-row{display:flex;gap:10px;margin-bottom:20px}
+.mode-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--ink2);font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:6px}
+.mode-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+/* GENERATE BTN */
+.btn-generate{width:100%;padding:14px 20px;background:var(--accent);border:none;border-radius:var(--radius);color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all var(--tr);letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(37,99,235,.3);margin-top:4px}
+.btn-generate:hover{background:#1d4ed8;box-shadow:0 4px 14px rgba(37,99,235,.4);transform:translateY(-1px)}
+.btn-generate:active{transform:translateY(0)}
+.btn-generate:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.error-msg{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:12px 16px;color:#b91c1c;font-size:13px;margin-top:12px;display:none}
+[data-theme="dark"] .error-msg{background:#2a1010;border-color:#7f1d1d;color:#fca5a5}
+/* LOADING */
+.loading{text-align:center;padding:64px 20px;display:none}
+.loading-icon{font-size:36px;margin-bottom:16px;animation:spin 2s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-bar-wrap{width:280px;height:3px;background:var(--border);border-radius:2px;margin:16px auto 0;overflow:hidden}
+.loading-bar{height:100%;width:0;background:var(--accent);border-radius:2px;animation:loadProgress 5s ease-in-out forwards}
+@keyframes loadProgress{0%{width:0}60%{width:75%}90%{width:92%}100%{width:96%}}
+.loading p{color:var(--ink2);font-size:14px;font-weight:500}
+.loading .sub{font-size:12px;color:var(--ink3);margin-top:4px}
+/* RESULT */
+#result{display:none;animation:fadeUp .45s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+/* SHARE BAR */
+.share-bar{background:var(--accent-bg);border:1px solid var(--accent-bdr);border-radius:var(--radius-lg);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.share-bar p{font-size:13px;color:var(--accent);font-weight:600}
+.share-url{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--accent-bdr);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--ink3);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;outline:none}
+.btn-share{padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--tr);white-space:nowrap;font-family:'Instrument Sans',sans-serif}
+.btn-share:hover{background:#1d4ed8}
+/* SECTION */
+.section{margin-bottom:36px}
+.section-head{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border)}
+/* OVERVIEW */
+.overview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-sm);margin-bottom:28px;position:relative;overflow:hidden}
+.overview::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#818cf8,#34d399)}
+.overview h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.overview-tagline{font-family:'Fraunces',serif;font-style:italic;color:var(--accent);font-size:15px;margin-bottom:10px}
+.overview p{color:var(--ink2);font-size:14px;line-height:1.65}
+.overview-meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.meta-item .k{font-size:11px;color:var(--ink3);letter-spacing:.8px;text-transform:uppercase;font-weight:500;display:block}
+.meta-item .v{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-top:2px}
+/* SWATCHES */
+.colors-row{display:flex;flex-wrap:wrap;gap:10px}
+.swatch{border-radius:10px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .15s,box-shadow .15s;width:76px}
+.swatch:hover{transform:scale(1.06);box-shadow:var(--shadow-md)}
+.swatch-block{height:52px}
+.swatch-foot{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:6px 7px}
+.swatch-name{font-size:9px;color:var(--ink3);display:block;font-weight:500}
+.swatch-hex{font-size:10px;color:var(--ink);display:block;font-weight:600;font-family:monospace}
+/* TYPE */
+.type-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:var(--shadow-sm)}
+.type-prev{flex:1;line-height:1.2}
+.type-meta{font-size:11px;color:var(--ink3);text-align:right;white-space:nowrap;font-family:monospace}
+/* SPACING */
+.spacing-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.space-col{display:flex;flex-direction:column;align-items:center;gap:6px}
+.space-block{background:var(--accent);border-radius:4px;opacity:.75}
+.space-lbl{font-size:10px;color:var(--ink3);font-family:monospace}
+/* RADIUS */
+.radius-preview{background:var(--surface2);border:2px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center}
+/* COMPONENTS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}
+.comp-name{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.comp-desc{font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5}
+/* EXPORT */
+.export-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.export-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface2);overflow-x:auto}
+.etab{padding:11px 18px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--ink3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--tr);font-family:'Instrument Sans',sans-serif}
+.etab:hover{color:var(--ink)}
+.etab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--surface)}
+.code-wrap{position:relative}
+.code-block{padding:24px;font-size:12px;line-height:1.85;overflow:auto;max-height:340px;white-space:pre;font-family:monospace;color:var(--ink2);background:var(--surface);tab-size:2}
+[data-theme="dark"] .code-block{color:#c4b5fd}
+.copy-btn{position:absolute;top:12px;right:12px;padding:5px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--ink3);font-size:11px;font-weight:600;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all var(--tr)}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.copy-btn.copied{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="logo-dot"></span>DesignOS</div>
+  <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><span id="themeIcon">🌙</span></div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Your <em>complete</em><br/>design system,<br/>AI-generated.</h1>
+      <p>Enter your brand details and get tokens, typography, components, and export-ready code in seconds.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill"><strong>16</strong> color tokens</div>
+      <div class="stat-pill"><strong>7</strong> type scales</div>
+      <div class="stat-pill"><strong>4</strong> export formats</div>
+      <div class="stat-pill"><strong>10</strong> components</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Brand Details</div>
+    <div class="form-row">
+      <div class="field">
+        <label>Brand / Product Name</label>
+        <input type="text" id="brandName" placeholder="e.g. Nova, Forge, Pulse"/>
+      </div>
+      <div class="field">
+        <label>Primary Color</label>
+        <input type="color" id="primaryColor" value="#2563eb"/>
+      </div>
+      <div class="field">
+        <label>Industry</label>
+        <select id="industry">
+          <option value="SaaS / Tech">SaaS / Tech</option>
+          <option value="Fintech">Fintech</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="E-commerce">E-commerce</option>
+          <option value="Creative Agency">Creative Agency</option>
+          <option value="Mobile App">Mobile App</option>
+          <option value="EdTech">EdTech</option>
+          <option value="Gaming">Gaming</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:20px">
+      <label>Design Vibe</label>
+      <div class="pills">
+        <div class="pill active" onclick="setPill(this,'Minimal & Clean')">Minimal & Clean</div>
+        <div class="pill" onclick="setPill(this,'Bold & Expressive')">Bold & Expressive</div>
+        <div class="pill" onclick="setPill(this,'Friendly & Rounded')">Friendly & Rounded</div>
+        <div class="pill" onclick="setPill(this,'Professional & Corporate')">Professional & Corporate</div>
+        <div class="pill" onclick="setPill(this,'Dark & Premium')">Dark & Premium</div>
+        <div class="pill" onclick="setPill(this,'Playful & Colorful')">Playful & Colorful</div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:20px">
+      <label>Color Mode</label>
+      <div class="mode-row">
+        <button class="mode-btn active" id="mode-light" onclick="setMode('light')">☀️ Light Mode</button>
+        <button class="mode-btn" id="mode-dark" onclick="setMode('dark')">🌙 Dark Mode</button>
+        <button class="mode-btn" id="mode-both" onclick="setMode('both')">⚡ Both</button>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generate()">✦ Generate Design System</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-icon">⚙️</div>
+    <p id="loadingText">Generating your design system…</p>
+    <div class="sub" id="loadingSub">Crafting your color palette</div>
+    <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  </div>
+
+  <div id="result"></div>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+let selectedVibe='Minimal & Clean',selectedMode='light',activeTab='css',currentDS=null;
+
+function toggleTheme(){
+  const h=document.documentElement,dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('themeIcon').textContent=dark?'🌙':'☀️';
+}
+function setPill(el,v){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selectedVibe=v}
+function setMode(m){selectedMode=m;['light','dark','both'].forEach(id=>document.getElementById('mode-'+id).classList.toggle('active',id===m))}
+
+const steps=[
+  ['Analysing brand identity…','Building color relationships'],
+  ['Generating typography scale…','Pairing display and body fonts'],
+  ['Defining component library…','Spacing, radius, shadows'],
+  ['Writing token values…','CSS, Tailwind, Figma, JSON'],
+  ['Finalising your system…','Almost ready!'],
+];
+let si=0,st;
+function startLoad(){
+  si=0;const b=document.getElementById('loadingBar');b.style.animation='none';b.offsetHeight;b.style.animation='';
+  upStep();st=setInterval(upStep,1900);
+}
+function upStep(){const s=steps[si%steps.length];document.getElementById('loadingText').textContent=s[0];document.getElementById('loadingSub').textContent=s[1];si++}
+function stopLoad(){clearInterval(st)}
+
+async function generate(){
+  const brand=document.getElementById('brandName').value.trim()||'Brand';
+  const color=document.getElementById('primaryColor').value;
+  const industry=document.getElementById('industry').value;
+  document.getElementById('generateBtn').disabled=true;
+  document.getElementById('loading').style.display='block';
+  document.getElementById('result').style.display='none';
+  document.getElementById('errorMsg').style.display='none';
+  startLoad();
+
+  const prompt=`You are a world-class design-systems architect. Generate a complete design system for:
+Brand: ${brand}
+Primary color: ${color}
+Industry: ${industry}
+Vibe: ${selectedVibe}
+Mode: ${selectedMode}
+
+Return ONLY valid JSON, no markdown:
+{
+  "brandName":"string",
+  "tagline":"5-8 word brand tagline",
+  "description":"2-sentence personality description",
+  "industry":"string",
+  "vibe":"string",
+  "colors":{
+    "primary":"#hex","primary-light":"#hex","primary-dark":"#hex",
+    "secondary":"#hex","accent":"#hex",
+    "background":"#hex","surface":"#hex","surface-alt":"#hex","border":"#hex",
+    "text-primary":"#hex","text-secondary":"#hex","text-disabled":"#hex",
+    "success":"#hex","warning":"#hex","error":"#hex","info":"#hex"
+  },
+  "typography":{
+    "displayFont":"exact Google Font name",
+    "bodyFont":"exact Google Font name",
+    "monoFont":"exact Google Font monospace name",
+    "scale":[
+      {"name":"Display","size":"56px","weight":"800","lineHeight":"1.05","sample":"4-5 word sample"},
+      {"name":"H1","size":"40px","weight":"700","lineHeight":"1.1","sample":"4-5 word sample"},
+      {"name":"H2","size":"28px","weight":"600","lineHeight":"1.2","sample":"4-5 word sample"},
+      {"name":"H3","size":"20px","weight":"600","lineHeight":"1.3","sample":"4-5 word sample"},
+      {"name":"Body","size":"16px","weight":"400","lineHeight":"1.6","sample":"The quick brown fox"},
+      {"name":"Small","size":"13px","weight":"400","lineHeight":"1.5","sample":"Supporting detail text"},
+      {"name":"Label","size":"11px","weight":"600","lineHeight":"1.4","sample":"BUTTON LABEL"}
+    ]
+  },
+  "spacing":[2,4,8,12,16,20,24,32,40,48,64,80,96],
+  "borderRadius":{"none":"0px","sm":"4px","md":"8px","lg":"12px","xl":"20px","2xl":"32px","full":"9999px"},
+  "shadows":{
+    "xs":"css box-shadow",
+    "sm":"css box-shadow",
+    "md":"css box-shadow",
+    "lg":"css box-shadow",
+    "xl":"css box-shadow"
+  },
+  "components":[
+    {"name":"Primary Button","description":"Main CTA, highest emphasis"},
+    {"name":"Secondary Button","description":"Alternative, lower emphasis"},
+    {"name":"Input Field","description":"Single-line text entry"},
+    {"name":"Checkbox","description":"Binary selection control"},
+    {"name":"Card","description":"Elevated content container"},
+    {"name":"Badge","description":"Compact status or label"},
+    {"name":"Avatar","description":"User identity representation"},
+    {"name":"Alert","description":"Feedback and notification"},
+    {"name":"Tooltip","description":"Contextual help on hover"},
+    {"name":"Modal","description":"Focused overlay dialog"}
+  ]
+}`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    currentDS=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    stopLoad();
+    document.getElementById('loading').style.display='none';
+    document.getElementById('generateBtn').disabled=false;
+    renderResult(currentDS);
+    encodeState();
+  }catch(e){
+    stopLoad();
+    document.getElementById('loading').style.display='none';
+    document.getElementById('generateBtn').disabled=false;
+    document.getElementById('errorMsg').style.display='block';
+    document.getElementById('errorMsg').textContent='⚠️ Generation failed — please try again. ('+e.message+')';
+  }
+}
+
+function renderResult(ds){
+  const c=ds.colors;
+  const swatches=Object.entries(c).map(([n,v])=>`<div class="swatch" title="${n}: ${v}"><div class="swatch-block" style="background:${v}"></div><div class="swatch-foot"><span class="swatch-name">${n}</span><span class="swatch-hex">${v}</span></div></div>`).join('');
+  const typeRows=ds.typography.scale.map(t=>`<div class="type-row"><div class="type-prev" style="font-family:'${ds.typography.displayFont}',sans-serif;font-size:${t.size};font-weight:${t.weight};line-height:${t.lineHeight};color:${c['text-primary']||'#1a1916'}">${t.sample}</div><div class="type-meta">${t.name} · ${t.size} · w${t.weight} · lh ${t.lineHeight}</div></div>`).join('');
+  const spaceBlocks=ds.spacing.map(s=>`<div class="space-col"><div class="space-block" style="width:${Math.min(s*1.4,100)}px;height:${Math.min(s*1.4,100)}px;min-width:4px;min-height:4px"></div><span class="space-lbl">${s}</span></div>`).join('');
+  const radiusSamples=Object.entries(ds.borderRadius).map(([k,v])=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div class="radius-preview" style="border-radius:${v};width:52px;height:52px"></div><span style="font-size:10px;color:var(--ink3);font-family:monospace;text-align:center">${k}<br/>${v}</span></div>`).join('');
+  const shadowSamples=Object.entries(ds.shadows).map(([k,v])=>`<div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:60px;height:60px;background:${c.surface||'#fff'};border-radius:10px;box-shadow:${v}"></div><span style="font-size:10px;color:var(--ink3);font-family:monospace">${k}</span></div>`).join('');
+  const compCards=ds.components.map(comp=>`<div class="comp-card"><div class="comp-name">${comp.name}</div><div class="comp-desc">${comp.description}</div>${buildPreview(comp.name,c,ds.borderRadius)}</div>`).join('');
+  const css=buildCSS(ds),tw=buildTailwind(ds),fig=buildFigma(ds),json=buildJSON(ds);
+  window._codes={css,tailwind:tw,figma:fig,json};
+  const shareURL=window.location.href.split('#')[0]+'#'+encodeURIComponent(JSON.stringify(ds));
+
+  document.getElementById('result').innerHTML=`
+    <div class="share-bar">
+      <p>🔗 Share this design system</p>
+      <input class="share-url" id="shareInput" value="${shareURL}" readonly onclick="this.select()"/>
+      <button class="btn-share" onclick="copyShare()">Copy Link</button>
+    </div>
+    <div class="overview">
+      <h2>${ds.brandName} Design System</h2>
+      <div class="overview-tagline">"${ds.tagline}"</div>
+      <p>${ds.description}</p>
+      <div class="overview-meta">
+        <div class="meta-item"><span class="k">Industry</span><span class="v">${ds.industry}</span></div>
+        <div class="meta-item"><span class="k">Vibe</span><span class="v">${ds.vibe}</span></div>
+        <div class="meta-item"><span class="k">Display Font</span><span class="v">${ds.typography.displayFont}</span></div>
+        <div class="meta-item"><span class="k">Body Font</span><span class="v">${ds.typography.bodyFont}</span></div>
+        <div class="meta-item"><span class="k">Mono Font</span><span class="v">${ds.typography.monoFont}</span></div>
+        <div class="meta-item"><span class="k">Color Tokens</span><span class="v">${Object.keys(c).length}</span></div>
+        <div class="meta-item"><span class="k">Components</span><span class="v">${ds.components.length}</span></div>
+      </div>
+    </div>
+    <div class="section"><div class="section-head">Color Tokens</div><div class="colors-row">${swatches}</div></div>
+    <div class="section"><div class="section-head">Typography Scale</div>${typeRows}</div>
+    <div class="section"><div class="section-head">Spacing Scale</div><div class="spacing-row">${spaceBlocks}</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:36px">
+      <div><div class="section-head">Border Radius</div><div style="display:flex;flex-wrap:wrap;gap:10px">${radiusSamples}</div></div>
+      <div><div class="section-head">Shadows</div><div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">${shadowSamples}</div></div>
+    </div>
+    <div class="section"><div class="section-head">Component Library (${ds.components.length} components)</div><div class="components-grid">${compCards}</div></div>
+    <div class="section">
+      <div class="section-head">Export</div>
+      <div class="export-card">
+        <div class="export-tabs">
+          <button class="etab active" data-tab="css" onclick="switchTab('css')">CSS Variables</button>
+          <button class="etab" data-tab="tailwind" onclick="switchTab('tailwind')">Tailwind Config</button>
+          <button class="etab" data-tab="figma" onclick="switchTab('figma')">Figma Tokens (W3C)</button>
+          <button class="etab" data-tab="json" onclick="switchTab('json')">JSON Tokens</button>
+        </div>
+        <div class="code-wrap">
+          <div class="code-block" id="panel-css">${esc(css)}</div>
+          <div class="code-block" id="panel-tailwind" style="display:none">${esc(tw)}</div>
+          <div class="code-block" id="panel-figma" style="display:none">${esc(fig)}</div>
+          <div class="code-block" id="panel-json" style="display:none">${esc(json)}</div>
+          <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copy</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('result').style.display='block';
+  const names=[ds.typography.displayFont,ds.typography.bodyFont,ds.typography.monoFont].filter(Boolean).map(f=>f.replace(/ /g,'+')).join('&family=');
+  const lnk=document.createElement('link');lnk.rel='stylesheet';lnk.href=`https://fonts.googleapis.com/css2?family=${names}&display=swap`;document.head.appendChild(lnk);
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function switchTab(t){
+  activeTab=t;
+  document.querySelectorAll('.etab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+  ['css','tailwind','figma','json'].forEach(id=>{const el=document.getElementById('panel-'+id);if(el)el.style.display=id===t?'block':'none'});
+}
+function copyCode(){
+  navigator.clipboard.writeText(window._codes[activeTab]||'').then(()=>{
+    const b=document.getElementById('copyBtn');b.textContent='✓ Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},1600);
+  });
+}
+function copyShare(){navigator.clipboard.writeText(document.getElementById('shareInput').value).then(()=>toast('Link copied! 🔗'))}
+function encodeState(){if(!currentDS)return;window.history.replaceState(null,'',window.location.pathname+'#'+encodeURIComponent(JSON.stringify(currentDS)));const si=document.getElementById('shareInput');if(si)si.value=window.location.href}
+function loadFromHash(){try{const h=decodeURIComponent(window.location.hash.slice(1));if(!h)return;currentDS=JSON.parse(h);renderResult(currentDS)}catch(e){}}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* Component previews */
+function buildPreview(name,c,radius){
+  const p=c.primary||'#2563eb',s=c.secondary||'#64748b',bg=c.surface||'#fff';
+  const bd=c.border||'#e2e8f0',t=c['text-primary']||'#1a1916',tm=c['text-secondary']||'#6b7280';
+  const r=radius.md||'8px',rS=radius.sm||'4px',rF=radius.full||'9999px';
+  const ok=c.success||'#16a34a',wa=c.warning||'#ea580c';
+  switch(name){
+    case'Primary Button':return`<button style="background:${p};color:#fff;border:none;border-radius:${r};padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer">Get Started →</button>`;
+    case'Secondary Button':return`<button style="background:transparent;color:${p};border:1.5px solid ${p};border-radius:${r};padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer">Learn More</button>`;
+    case'Input Field':return`<input style="background:${bg};border:1.5px solid ${bd};border-radius:${r};padding:9px 13px;color:${t};font-size:13px;width:100%;outline:none" placeholder="Enter email…"/>`;
+    case'Checkbox':return`<div style="display:flex;flex-direction:column;gap:8px"><label style="display:flex;align-items:center;gap:8px;font-size:13px;color:${t};cursor:pointer"><div style="width:16px;height:16px;background:${p};border-radius:${rS};display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:10px;font-weight:700">✓</span></div>Checked</label><label style="display:flex;align-items:center;gap:8px;font-size:13px;color:${tm};cursor:pointer"><div style="width:16px;height:16px;border:1.5px solid ${bd};border-radius:${rS}"></div>Unchecked</label></div>`;
+    case'Card':return`<div style="background:${bg};border:1px solid ${bd};border-radius:${r};padding:12px"><div style="font-size:13px;font-weight:600;color:${t};margin-bottom:4px">Card Title</div><div style="font-size:12px;color:${tm};line-height:1.5">Supporting description text goes here.</div></div>`;
+    case'Badge':return`<div style="display:flex;gap:7px;flex-wrap:wrap"><span style="background:${p}20;color:${p};border:1px solid ${p}40;border-radius:${rF};padding:3px 10px;font-size:11px;font-weight:600">Active</span><span style="background:${ok}20;color:${ok};border:1px solid ${ok}40;border-radius:${rF};padding:3px 10px;font-size:11px;font-weight:600">Done</span><span style="background:${wa}20;color:${wa};border:1px solid ${wa}40;border-radius:${rF};padding:3px 10px;font-size:11px;font-weight:600">Pending</span></div>`;
+    case'Avatar':return`<div style="display:flex;align-items:center;gap:10px"><div style="display:flex">${['A','B','C'].map((l,i)=>`<div style="width:32px;height:32px;border-radius:50%;background:${[p,s,ok][i]};border:2px solid ${bg};margin-left:${i?-8:0}px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">${l}</div>`).join('')}</div><span style="font-size:12px;color:${tm}">+3 more</span></div>`;
+    case'Alert':return`<div style="background:${ok}18;border:1px solid ${ok}40;border-radius:${r};padding:10px 12px;display:flex;align-items:flex-start;gap:8px"><span style="color:${ok};font-size:14px">✓</span><div><div style="font-size:12px;font-weight:600;color:${t}">Changes saved!</div><div style="font-size:11px;color:${tm}">Your work is up to date.</div></div></div>`;
+    case'Tooltip':return`<div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><div style="background:${t};color:${bg};padding:5px 10px;border-radius:${rS};font-size:11px;font-weight:500;white-space:nowrap">Helpful tooltip</div><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid ${t}"></div><button style="background:${bg};border:1px solid ${bd};border-radius:${r};padding:6px 12px;font-size:12px;color:${tm};cursor:pointer">Hover me</button></div>`;
+    case'Modal':return`<div style="background:${bg};border:1px solid ${bd};border-radius:${r};padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.12)"><div style="font-size:13px;font-weight:700;color:${t};margin-bottom:6px">Confirm Action</div><div style="font-size:12px;color:${tm};margin-bottom:12px;line-height:1.5">Are you sure? This cannot be undone.</div><div style="display:flex;gap:8px"><button style="background:${p};color:#fff;border:none;border-radius:${rS};padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">Confirm</button><button style="background:transparent;color:${tm};border:1px solid ${bd};border-radius:${rS};padding:7px 14px;font-size:12px;cursor:pointer">Cancel</button></div></div>`;
+    default:return'';
+  }
+}
+
+/* Code builders */
+function buildCSS(ds){
+  const c=ds.colors,r=ds.borderRadius,sh=ds.shadows,sp=ds.spacing;
+  return`:root {\n  /* Colors */\n`+Object.entries(c).map(([k,v])=>`  --color-${k}: ${v};`).join('\n')+`\n\n  /* Typography */\n  --font-display: '${ds.typography.displayFont}', sans-serif;\n  --font-body:    '${ds.typography.bodyFont}', sans-serif;\n  --font-mono:    '${ds.typography.monoFont}', monospace;\n\n  /* Spacing */\n`+sp.map((v,i)=>`  --space-${i+1}: ${v}px;`).join('\n')+`\n\n  /* Border Radius */\n`+Object.entries(r).map(([k,v])=>`  --radius-${k}: ${v};`).join('\n')+`\n\n  /* Shadows */\n`+Object.entries(sh).map(([k,v])=>`  --shadow-${k}: ${v};`).join('\n')+`\n}`;
+}
+function buildTailwind(ds){
+  const c=ds.colors,r=ds.borderRadius,sp=ds.spacing;
+  return`// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n`+Object.entries(c).map(([k,v])=>`        '${k}': '${v}',`).join('\n')+`\n      },\n      fontFamily: {\n        display: ['${ds.typography.displayFont}', 'sans-serif'],\n        body:    ['${ds.typography.bodyFont}', 'sans-serif'],\n        mono:    ['${ds.typography.monoFont}', 'monospace'],\n      },\n      spacing: {\n`+sp.map((v,i)=>`        '${i+1}': '${v}px',`).join('\n')+`\n      },\n      borderRadius: {\n`+Object.entries(r).map(([k,v])=>`        '${k}': '${v}',`).join('\n')+`\n      },\n    }\n  }\n}`;
+}
+function buildFigma(ds){
+  const c=ds.colors,r=ds.borderRadius,sh=ds.shadows,sp=ds.spacing;
+  const colorTok=Object.entries(c).reduce((a,[k,v])=>{a[k]={$value:v,$type:'color'};return a},{});
+  const radiusTok=Object.entries(r).reduce((a,[k,v])=>{a[k]={$value:v,$type:'dimension'};return a},{});
+  const shadowTok=Object.entries(sh).reduce((a,[k,v])=>{a[k]={$value:v,$type:'shadow'};return a},{});
+  const spaceTok=sp.reduce((a,v,i)=>{a[`space-${i+1}`]={$value:`${v}px`,$type:'dimension'};return a},{});
+  const fontTok={display:{$value:ds.typography.displayFont,$type:'fontFamily'},body:{$value:ds.typography.bodyFont,$type:'fontFamily'},mono:{$value:ds.typography.monoFont,$type:'fontFamily'}};
+  return JSON.stringify({color:colorTok,typography:fontTok,spacing:spaceTok,borderRadius:radiusTok,shadow:shadowTok},null,2);
+}
+function buildJSON(ds){
+  return JSON.stringify({meta:{brand:ds.brandName,tagline:ds.tagline,industry:ds.industry,vibe:ds.vibe},colors:ds.colors,typography:{displayFont:ds.typography.displayFont,bodyFont:ds.typography.bodyFont,monoFont:ds.typography.monoFont,scale:ds.typography.scale},spacing:ds.spacing,borderRadius:ds.borderRadius,shadows:ds.shadows,components:ds.components},null,2);
+}
+
+window.addEventListener('load',loadFromHash);
+</script>
+</body>
+</html>
